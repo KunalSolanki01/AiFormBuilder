@@ -1,0 +1,20 @@
+{
+  "name": "@afb/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Form schema, field types and answer validation shared by client and server",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.0"
+  }
+}

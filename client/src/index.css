@@ -1,0 +1,93 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Newsreader', ui-serif, Georgia, serif;
+
+  /* Warm paper & ink. Every neutral in the app comes from this scale. */
+  --color-slate-50: #f7f5f0;
+  --color-slate-100: #efece4;
+  --color-slate-200: #e2ddd1;
+  --color-slate-300: #cfc9ba;
+  --color-slate-400: #a39d8d;
+  --color-slate-500: #78726a;
+  --color-slate-600: #57524a;
+  --color-slate-700: #403c36;
+  --color-slate-800: #2a2723;
+  --color-slate-900: #1c1a17;
+  --color-slate-950: #0f0e0c;
+
+  /* One accent: forest green. (Token name kept so components don't change.) */
+  --color-brand-50: #e8f0ec;
+  --color-brand-100: #d2e3da;
+  --color-brand-500: #2f7d65;
+  --color-brand-600: #1f6b55;
+  --color-brand-700: #17543f;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-slate-50 text-slate-900 antialiased font-sans; font-feature-settings: 'ss01', 'cv11'; }
+  h1, h2, h3 { text-wrap: balance; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-brand-600; }
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-serif); font-optical-sizing: auto; letter-spacing: -0.015em; }
+}
+
+/* ── Dark mode ──────────────────────────────────────────
+   The app is styled with the light neutral scale. Dark mode flips that scale
+   (50↔900, …) and remaps the few tinted colours, so components need no changes.
+   `text-white` is intentionally left alone. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  color-scheme: dark;
+  --color-slate-50: #12110f;
+  --color-slate-100: #1b1916;
+  --color-slate-200: #292621;
+  --color-slate-300: #3b372f;
+  --color-slate-400: #7a746a;
+  --color-slate-500: #a39d8d;
+  --color-slate-600: #cfc9ba;
+  --color-slate-700: #e2ddd1;
+  --color-slate-800: #efece4;
+  --color-slate-900: #f7f5f0;
+  --color-slate-950: #ffffff;
+
+  --color-brand-50: #14261f;
+  --color-brand-100: #1d3a2e;
+  --color-brand-500: #5fb89a;
+  --color-brand-600: #3f9a7e;
+  --color-brand-700: #8fd1b8;
+
+  --color-red-50: #3a1411;
+  --color-red-200: #6e2a24;
+  --color-red-700: #f5c2bb;
+  --color-red-800: #f5c2bb;
+  --color-amber-50: #33260c;
+  --color-amber-100: #3d2d0b;
+  --color-amber-800: #f0d58a;
+  --color-emerald-100: #12392b;
+  --color-emerald-800: #a6dcc5;
+}
+
+/* Surfaces that are literally white in light mode. */
+.dark .bg-white { background-color: #1b1916; }
+.dark .bg-white\/90 { background-color: rgb(18 17 15 / 0.92); }
+.dark .bg-white\/80 { background-color: rgb(18 17 15 / 0.85); }
+/* Primary button hover must stay darker than its base in dark mode. */
+.dark .hover\:bg-brand-700:hover { background-color: #2f866c; }
+/* Toggle thumb stays light. */
+.dark [role='switch'] > span { background-color: #f7f5f0; }
+
+/* Recharts */
+.dark .recharts-default-tooltip { background-color: #1b1916 !important; border-color: #3b372f !important; }
+.dark .recharts-tooltip-label, .dark .recharts-tooltip-item { color: #e2ddd1 !important; }
+.dark .recharts-cartesian-axis-tick-value, .dark .recharts-text { fill: #a39d8d; }
+.dark .recharts-cartesian-grid line { stroke: #292621; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

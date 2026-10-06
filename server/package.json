@@ -1,0 +1,28 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Form Builder V1 — Express REST API",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch-path=src --watch-path=../shared/src --env-file-if-exists=.env src/server.js",
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@afb/shared": "*",
+    "@supabase/supabase-js": "^2.57.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "groq-sdk": "^0.32.0",
+    "helmet": "^8.1.0",
+    "jose": "^6.2.12",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.0",
+    "vitest": "^3.2.0"
+  }
+}
