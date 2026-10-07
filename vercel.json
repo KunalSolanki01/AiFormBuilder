@@ -3,7 +3,6 @@
   "installCommand": "npm install",
   "functions": {
     "server/api.js": {
-      "runtime": "@vercel/node@5",
       "includeFiles": "shared/src/**"
     }
   },
