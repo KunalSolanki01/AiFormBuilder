@@ -32,6 +32,28 @@ export function createApp() {
       maxAge: 600,
     }),
   );
+  // Restore original request path when running behind Vercel rewrites
+  app.use((req, _res, next) => {
+    if (req.query?.__path !== undefined) {
+      const targetPath = '/' + String(req.query.__path).replace(/^\/+/, '');
+      const urlObj = new URL(req.url, 'http://localhost');
+      urlObj.searchParams.delete('__path');
+      delete req.query.__path;
+      req.url = targetPath + (urlObj.search || '');
+    } else if (req.headers['x-now-route-matches']) {
+      try {
+        const matches = new URLSearchParams(req.headers['x-now-route-matches']);
+        const matched = matches.get('1') || matches.get('path');
+        if (matched) {
+          req.url = '/' + decodeURIComponent(matched).replace(/^\/+/, '');
+        }
+      } catch {
+        /* ignore parsing error */
+      }
+    }
+    next();
+  });
+
   app.use(express.json({ limit: '200kb' }));
 
   app.get('/', (_req, res) => {
@@ -46,6 +68,7 @@ export function createApp() {
   });
 
   app.use('/api', apiLimiter, apiRouter);
+  app.use(apiLimiter, apiRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
