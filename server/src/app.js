@@ -17,10 +17,17 @@ export function createApp() {
     cors({
       origin(origin, callback) {
         // Same-origin / server-to-server requests have no Origin header.
-        if (!origin || env.CLIENT_ORIGINS.includes(origin)) return callback(null, true);
+        if (!origin) return callback(null, true);
+        const cleanOrigin = origin.replace(/\/$/, '');
+        if (
+          env.CLIENT_ORIGINS.includes(cleanOrigin) ||
+          (cleanOrigin.endsWith('.vercel.app') && cleanOrigin.includes('ai-form-builder-kunal'))
+        ) {
+          return callback(null, true);
+        }
         return callback(null, false);
       },
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       maxAge: 600,
     }),
@@ -44,3 +51,13 @@ export function createApp() {
   app.use(errorHandler);
   return app;
 }
+
+let appInstance;
+
+export default function handler(req, res) {
+  if (!appInstance) {
+    appInstance = createApp();
+  }
+  return appInstance(req, res);
+}
+
