@@ -27,6 +27,17 @@ export function createApp() {
   );
   app.use(express.json({ limit: '200kb' }));
 
+  app.get('/', (_req, res) => {
+    res.json({
+      success: true,
+      data: {
+        message: 'AI Form Builder API is running',
+        status: 'ok',
+        version: '1.0.0',
+      },
+    });
+  });
+
   app.use('/api', apiLimiter, apiRouter);
 
   app.use(notFoundHandler);

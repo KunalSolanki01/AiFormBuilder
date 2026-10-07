@@ -203,6 +203,15 @@ describe('forms lifecycle & errors', () => {
     expect(res.body.error.code).toBe('FIELD_TYPE_LOCKED');
   });
 
+  it('returns health checks on / and /api/health', async () => {
+    const root = await request(app).get('/');
+    expect(root.status).toBe(200);
+    expect(root.body.success).toBe(true);
+    const health = await request(app).get('/api/health');
+    expect(health.status).toBe(200);
+    expect(health.body.success).toBe(true);
+  });
+
   it('returns JSON errors without stack traces for unknown routes and bad JSON', async () => {
     const nf = await request(app).get('/api/nope');
     expect(nf.status).toBe(404);

@@ -2,11 +2,11 @@
   "version": 2,
   "installCommand": "npm install",
   "functions": {
-    "server/api.js": {
-      "includeFiles": "shared/src/**"
+    "api/index.js": {
+      "includeFiles": "shared/**,server/**"
     }
   },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/server/api.js" }
+    { "source": "/(.*)", "destination": "/api/index.js" }
   ]
 }

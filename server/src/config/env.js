@@ -33,8 +33,9 @@ const parsed = envSchema.safeParse({ ...testDefaults, ...process.env, ...(isTest
 
 if (!parsed.success) {
   const problems = parsed.error.issues.map((i) => `  • ${i.path.join('.')}: ${i.message}`).join('\n');
-  console.error(`\n❌ Invalid server environment configuration:\n${problems}\n\nCopy .env.example to server/.env and fill it in.\n`);
-  process.exit(1);
+  const errorMsg = `\n❌ Invalid server environment configuration:\n${problems}\n\nMake sure to configure these environment variables in your Vercel Project Settings (or copy .env.example to server/.env).\n`;
+  console.error(errorMsg);
+  throw new Error(errorMsg);
 }
 
 export const env = Object.freeze({

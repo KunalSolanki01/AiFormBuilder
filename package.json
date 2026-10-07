@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "AI Form Builder V1 — natural language to published forms, powered by Groq + Supabase",
+  "type": "module",
   "workspaces": [
     "shared",
     "server",
