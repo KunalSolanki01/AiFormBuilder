@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const formId = '11111111-1111-4111-8111-111111111111';
 const fieldId = '22222222-2222-4222-8222-222222222222';
 
-const state = { forms: [], rpc: vi.fn() };
+const state = { forms: [], rpc: vi.fn(), signUp: vi.fn() };
 
 // Minimal chainable Supabase query-builder stub backed by `state.forms`.
 function builder(table) {
@@ -45,7 +45,7 @@ vi.mock('../src/config/supabase.js', () => ({
             : { data: null, error: { message: 'bad jwt' } },
     },
   },
-  createAuthClient: () => ({}),
+  createAuthClient: () => ({ auth: { signUp: (...args) => state.signUp(...args) } }),
 }));
 
 const { createApp } = await import('../src/app.js');
@@ -71,9 +71,32 @@ const makeForm = (over = {}) => ({
 beforeEach(() => {
   state.forms = [makeForm()];
   state.rpc = vi.fn().mockResolvedValue({ data: { response_id: 'r1', duplicate: false }, error: null });
+  state.signUp = vi.fn().mockResolvedValue({
+    data: { user: { id: 'user-c', email: 'c@x.io' }, session: null },
+    error: null,
+  });
 });
 
 describe('auth & ownership', () => {
+  it('redirects Supabase email confirmation to the client login page', async () => {
+    const res = await request(app).post('/api/auth/register').send({
+      name: 'New User',
+      email: 'new@example.com',
+      password: 'safe-password-123',
+    });
+
+    expect(res.status).toBe(201);
+    expect(res.body.data.requires_confirmation).toBe(true);
+    expect(state.signUp).toHaveBeenCalledWith({
+      email: 'new@example.com',
+      password: 'safe-password-123',
+      options: {
+        data: { name: 'New User' },
+        emailRedirectTo: 'http://localhost:5173/login?confirmed=1',
+      },
+    });
+  });
+
   it('rejects missing or invalid tokens', async () => {
     expect((await request(app).get('/api/forms')).status).toBe(401);
     const bad = await request(app).get('/api/forms').set('Authorization', 'Bearer nope');

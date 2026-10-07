@@ -1,4 +1,5 @@
 import { createAuthClient, supabaseAdmin } from '../config/supabase.js';
+import { env } from '../config/env.js';
 import { AppError, conflict, unauthorized } from '../utils/AppError.js';
 
 const toSession = (session) =>
@@ -38,7 +39,10 @@ export async function register(req, res) {
   const { data, error } = await createAuthClient().auth.signUp({
     email,
     password,
-    options: { data: { name } },
+    options: {
+      data: { name },
+      emailRedirectTo: `${env.CLIENT_ORIGINS[0]}/login?confirmed=1`,
+    },
   });
 
   if (error) {

@@ -22,7 +22,7 @@ The same `shared/` validation runs in the browser and on the server, so the back
    [20261006000000_v1_init.sql](supabase/migrations/20261006000000_v1_init.sql) (tables, RLS, functions) and
    [20261006010000_file_uploads.sql](supabase/migrations/20261006010000_file_uploads.sql) (file field type + private `form-uploads` bucket), and
    [20261006020000_one_response_per_email.sql](supabase/migrations/20261006020000_one_response_per_email.sql) (one response per verified email).
-   For quick local testing, disable *Authentication → Providers → Email → Confirm email*; otherwise users must confirm before logging in (the UI handles both).
+   In *Authentication → URL Configuration*, add the frontend URL(s) to **Redirect URLs** (for example `http://localhost:5173/login?confirmed=1` and `http://localhost:5180/login?confirmed=1`). The first origin in `CLIENT_URL` is used for email confirmation redirects. For quick local testing, disable *Authentication → Providers → Email → Confirm email*; otherwise users must confirm before logging in (the UI handles both).
 2. **Groq** — create a key at <https://console.groq.com>.
 3. **Env** — copy `.env.example` to `server/.env` and fill in the values.
 4. **Run**

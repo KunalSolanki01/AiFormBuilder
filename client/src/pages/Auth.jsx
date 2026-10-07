@@ -46,6 +46,7 @@ export function Login() {
   const login = useAuth((s) => s.login);
   const navigate = useNavigate();
   const location = useLocation();
+  const emailConfirmed = new URLSearchParams(location.search).get('confirmed') === '1';
   const [values, setValues] = useState({ email: '', password: '' });
   const { error, fieldErrors, loading, submit } = useAuthForm(login);
   const set = (k) => (e) => setValues((v) => ({ ...v, [k]: e.target.value }));
@@ -57,6 +58,11 @@ export function Login() {
       footer={<>No account yet? <Link to="/register" className="font-medium text-brand-600 hover:underline">Sign up</Link></>}
     >
       <form className="space-y-4" onSubmit={submit(values, () => navigate(location.state?.from ?? '/dashboard', { replace: true }))}>
+        {emailConfirmed && (
+          <p role="status" className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+            Your email is confirmed. Log in to continue.
+          </p>
+        )}
         <ErrorBanner>{error}</ErrorBanner>
         <Field label="Email" error={fieldErrors.email} required>
           {(a) => <Input {...a} type="email" autoComplete="email" value={values.email} onChange={set('email')} required />}
